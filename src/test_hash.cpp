@@ -1,6 +1,16 @@
 #include "hash_map.h"
 #include <string>
 
+
+void add_some(Map<int, char>* the_map){
+  
+  int new3 = 598;
+  char new4 = 'd';
+	the_map->put(new3, new4);
+
+}
+
+
 int main(){
 
 	Map<std::string, std::string> the_map;
@@ -36,13 +46,10 @@ int main(){
 	
   int new1 = 10;
   char new2 = 'c';
-  int new3 = 598;
-  char new4 = 'd';
 	new_map.put(new1, new2);
-	new_map.put(new3, new4);
-
+  add_some(&new_map);
 	char get1 = new_map.get(new1);
-	char get2 = new_map.get(new3);
+	char get2 = new_map.get(598);
   char get3 = new_map.get(5);
 
 	std::cout << "Get1: " << get1 << std::endl;
