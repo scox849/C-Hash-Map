@@ -1,6 +1,5 @@
 #include "hash_map.h"
-
-
+#include <string>
 
 int main(){
 
@@ -26,7 +25,39 @@ int main(){
 	std::cout << "Test 3: " << getval3 << std::endl;
   the_map.clear();
 
+  getval1 = the_map.get(test1);
+  getval2 = the_map.get(test2);
+  getval3 = the_map.get(test5);
 	std::cout << "Test 1: " << getval1 << std::endl;
 	std::cout << "Test 2: " << getval2 << std::endl;
 	std::cout << "Test 3: " << getval3 << std::endl;
+
+	Map<int, char> new_map;
+	
+  int new1 = 10;
+  char new2 = 'c';
+  int new3 = 598;
+  char new4 = 'd';
+	new_map.put(new1, new2);
+	new_map.put(new3, new4);
+
+	char get1 = new_map.get(new1);
+	char get2 = new_map.get(new3);
+  char get3 = new_map.get(5);
+
+	std::cout << "Get1: " << get1 << std::endl;
+	std::cout << "Get2: " << get2 << std::endl;
+	std::cout << "Get3: " << get3 << std::endl;
+
+  Map<int, int> even_newer;
+
+  int fir = 9;
+  int sec = 5;
+
+  even_newer.put(fir,sec);
+  int check = even_newer.get(fir);
+
+  std::cout << "check " << check << std::endl;
+  std::cout << "check2 " << even_newer.get(65) << std::endl;
+
 }
