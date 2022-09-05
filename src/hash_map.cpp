@@ -2,82 +2,110 @@
 #include <string>
 #include <vector>
 #include <cstddef>
+#include <limits>
 
-
+#define MAX_MAP_SIZE 10000000
 
 template <typename K, typename V>
 
 class Map{
 
 	public: 
-		Map(){}
+		Map(){
+			initialize();
+		}
 
-		~Map(){}
+		~Map(){
+			free_all();
+			free(map_values);
+		}
+		
+		void clear(){
+		}
+		
+		V get(K key){
+			std::size_t key_hash = std::hash<K>()(key);
+			key_hash %= MAX_MAP_SIZE;
+			int index = static_cast<int>(key_hash);
+			V value = map_values[index]->valueObject;
 
-	struct map_pair{
-		K keyObject;
-		V valueObject;
-	};
-	
-	typedef struct map_pair map_pair;
-	typedef unsigned long long uint_64;
+			return value;
+		}
 
-	//std::vector<map_pair> map_values;
-	map_pair map_values[sizeof(int)];
-	int valueListIdx = 0;
+		void put(K key, V value){
+			std::size_t key_hash = std::hash<K>()(key);
+			key_hash %= MAX_MAP_SIZE;
+			int index = static_cast<int>(key_hash);
+			map_pair *newPair = map_values[index];
+			newPair->keyObject = key;
+			newPair->valueObject = value;
+			map_values[index] = newPair;
+		}
 
-	void clear(){}
+	private:
+		struct map_pair{
+			K keyObject;
+			V valueObject;
+		};
+		
+		typedef struct map_pair map_pair;
 
+		//std::vector<map_pair> map_values;
+		map_pair** map_values = (map_pair**)malloc(sizeof(map_pair) * MAX_MAP_SIZE);
+		//int valueListIdx = 0;
+		
+		void initialize(){
+			for(int i = 0; i < MAX_MAP_SIZE; i++){
+				map_values[i] = (map_pair*)malloc(sizeof(map_pair));
+			}
+		}
 
-	V get(K key){
-		std::cout << "Called get\n";
-
-		std::size_t key_hash = std::hash<K>()(key);
-		key_hash %= sizeof(int);
-
-		int index = static_cast<int>(key_hash);
-
-		std::cout << "Hash in get " << key_hash << "\n";
-
-	  return map_values[index].valueObject;
-	}
-
-	void put(K key, V value){
-		map_pair newPair;
-		newPair.keyObject = key;
-		newPair.valueObject = value;
-
-		std::cout << newPair.valueObject << "\n";
-
-		std::size_t key_hash = std::hash<K>()(key);
-		//auto it = map_values.begin();
-		key_hash %= sizeof(int);
-		int index = static_cast<int>(key_hash);
-		map_values[index] = newPair;
-		//map_values.insert(it, index, newPair);
-
-		std::cout << "put Done\n"; 
-	}
+		void free_all(){
+			for(int i = 0; i < MAX_MAP_SIZE; i++){
+				free(map_values[i]);
+			}
+		}
 
 };
 
-//need to add check so that duplicate hashes are dealt with, need to change arrary to vector for resizeability
+void add_more(Map<std::string, std::string> *the_map){
+	
+	std::string test1 = "key";
+	std::string test2 = "c";
+	std::string test3 = "value";
+	std::string test4 = "d";
+	std::string test5 = "lto";
+	std::string test6 = "fsdat";
+
+	the_map->put(test1, test3);
+	the_map->put(test2, test4);
+	the_map->put(test5, test6);
+
+
+}
+
 
 int main(){
-
 	//Map <int, std::string>map;
-	Map <int, std::string>map;
+	
+	Map <std::string, std::string>mapi;
 
-	int test = 489496465;
-	std::string test2 = "teste";
+	std::string test = "a";
+	std::string test2 = "tes_word";
 
-	int sec = 496841235;
-	std::string te = "Correlation";
 
-	map.put(test, test2);
-	map.put(sec, te);
-	std::string tap = map.get(test);
-	std::string ta = map.get(sec);
-	std::cout << tap << "\n";
-	std::cout << ta << "\n";
+	std::string sec = "b";
+	std::string te = "Terminate";
+	
+	mapi.put(test, test2);
+	mapi.put(sec, te);
+	add_more(&mapi);
+	std::string tap = mapi.get(test);
+	std::string ta = mapi.get(sec);
+	std::string key = mapi.get("key");
+	std::string c = mapi.get("c");
+	std::cout << "tap is " << tap << "\n";
+	std::cout << "ta is " << ta << "\n";
+	std::cout << "key is " << key << "\n";
+	std::cout << "c is " << c << "\n";
 }
